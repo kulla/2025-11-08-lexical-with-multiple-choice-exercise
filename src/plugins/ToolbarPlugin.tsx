@@ -1,16 +1,3 @@
-import RedoIcon from './icons/arrow-clockwise.svg'
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-import UndoIcon from './icons/arrow-counterclockwise.svg'
-import BoldIcon from './icons/type-bold.svg'
-import ItalicIcon from './icons/type-italic.svg'
-import UnderlineIcon from './icons/type-underline.svg'
-
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { mergeRegister } from '@lexical/utils'
 import {
@@ -28,6 +15,18 @@ import {
 } from 'lexical'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { insertExercise } from './exercise'
+import RedoIcon from './icons/arrow-clockwise.svg'
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+import UndoIcon from './icons/arrow-counterclockwise.svg'
+import BoldIcon from './icons/type-bold.svg'
+import ItalicIcon from './icons/type-italic.svg'
+import UnderlineIcon from './icons/type-underline.svg'
 import { $getSelectedTopLevelNode } from './utils'
 
 export default function ToolbarPlugin() {
