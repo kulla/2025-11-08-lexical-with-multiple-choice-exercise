@@ -169,13 +169,13 @@ function $createExerciseNode(): ExerciseNode {
 
 function $createTaskNode(): TaskNode {
   const node = new TaskNode()
-  node.append($createParagraphNodeWithText('Task content...'))
+  node.append($createParagraphNodeWithText('Define the task here...'))
   return node
 }
 
 function $createSolutionNode(): SolutionNode {
   const node = new SolutionNode()
-  node.append($createParagraphNodeWithText('Solution content...'))
+  node.append($createParagraphNodeWithText('Define the solution here...'))
   return node
 }
 
