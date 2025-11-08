@@ -11,13 +11,13 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { TreeView } from '@lexical/react/LexicalTreeView'
-import ToolbarPlugin from './plugins/ToolbarPlugin'
 import {
   ExerciseNode,
   ExerciseNodeTransformations,
   SolutionNode,
   TaskNode,
 } from './plugins/exercise'
+import ToolbarPlugin from './plugins/ToolbarPlugin'
 
 export default function App() {
   const initialConfig: InitialConfigType = {
