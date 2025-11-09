@@ -2,6 +2,10 @@
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 
+.answer > p {
+  display: inline;
+}
+
 .exercise {
   background: linear-gradient(135deg, #2d2a22 0%, #3a3322 100%);
   padding: 24px 28px;

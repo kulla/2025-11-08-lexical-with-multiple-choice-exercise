@@ -143,6 +143,86 @@ export class SolutionNode extends ElementNode {
   }
 }
 
+export class AnswerNode extends ElementNode {
+  static getType(): string {
+    return 'answer'
+  }
+
+  static clone(node: SolutionNode): SolutionNode {
+    return new AnswerNode(node.__key)
+  }
+
+  createDOM(): HTMLElement {
+    const dom = document.createElement('div')
+    dom.className = 'answer'
+    return dom
+  }
+
+  updateDOM(): boolean {
+    return false
+  }
+
+  static importJSON(): AnswerNode {
+    return new AnswerNode()
+  }
+
+  exportJSON(): SerializedElementNode {
+    return {
+      ...super.exportJSON(),
+      type: 'answer',
+      version: 1,
+    }
+  }
+
+  isParentRequired(): boolean {
+    return true
+  }
+
+  createParentElementNode(): ElementNode {
+    return new SolutionNode()
+  }
+}
+
+export class BooleanNode extends ElementNode {
+  static getType(): string {
+    return 'boolean'
+  }
+
+  static clone(node: BooleanNode): BooleanNode {
+    return new BooleanNode(node.__key)
+  }
+
+  createDOM(): HTMLElement {
+    const dom = document.createElement('input')
+    dom.type = 'checkbox'
+    return dom
+  }
+
+  updateDOM(): boolean {
+    return false
+  }
+
+  static importJSON(): BooleanNode {
+    return new BooleanNode()
+  }
+
+  exportJSON(): SerializedElementNode {
+    return {
+      ...super.exportJSON(),
+      type: 'boolean',
+      version: 1,
+    }
+  }
+
+  isParentRequired(): boolean {
+    return true
+  }
+
+  createParentElementNode(): ElementNode {
+    return new AnswerNode()
+  }
+}
+
 function $createExerciseNode(): ExerciseNode {
   const exercise = new ExerciseNode()
   exercise.append($createTaskNode())
@@ -158,8 +238,20 @@ function $createTaskNode(): TaskNode {
 
 function $createSolutionNode(): SolutionNode {
   const node = new SolutionNode()
-  node.append($createParagraphNodeWithText('Define the solution here...'))
+  node.append($createAnswerNode())
+  node.append($createAnswerNode())
   return node
+}
+
+function $createAnswerNode(): AnswerNode {
+  const node = new AnswerNode()
+  node.append($createBooleanNode())
+  node.append($createParagraphNodeWithText('Answer text...'))
+  return node
+}
+
+function $createBooleanNode(): BooleanNode {
+  return new BooleanNode()
 }
 
 function $createParagraphNodeWithText(text: string) {

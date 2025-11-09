@@ -12,6 +12,8 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { TreeView } from '@lexical/react/LexicalTreeView'
 import {
+  AnswerNode,
+  BooleanNode,
   ExerciseNode,
   ExerciseNodeTransformations,
   SolutionNode,
@@ -22,7 +24,7 @@ import ToolbarPlugin from './plugins/ToolbarPlugin'
 export default function App() {
   const initialConfig: InitialConfigType = {
     namespace: 'MyEditor',
-    nodes: [ExerciseNode, SolutionNode, TaskNode],
+    nodes: [ExerciseNode, SolutionNode, TaskNode, BooleanNode, AnswerNode],
     onError(error) {
       console.error('Editor error:', error)
     },
