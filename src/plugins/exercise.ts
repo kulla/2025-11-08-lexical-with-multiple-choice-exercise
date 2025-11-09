@@ -195,6 +195,7 @@ export class BooleanNode extends ElementNode {
   createDOM(): HTMLElement {
     const dom = document.createElement('input')
     dom.type = 'checkbox'
+    dom.className = 'checkbox'
     return dom
   }
 
