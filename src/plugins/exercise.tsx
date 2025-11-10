@@ -1,3 +1,9 @@
+import {
+  $getEditor,
+  DecoratorNode,
+  EditorConfig,
+  SerializedDecoratorNode,
+} from 'lexical'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import {
   $createParagraphNode,
@@ -183,36 +189,75 @@ export class AnswerNode extends ElementNode {
   }
 }
 
-export class BooleanNode extends ElementNode {
+type BooleanNodeProps = {
+  checked: boolean
+  onChange: (checked: boolean) => void
+}
+
+function BooleanCheckbox({ checked, onChange }: BooleanNodeProps) {
+  return (
+    <input
+      type="checkbox"
+      className="checkbox"
+      checked={checked}
+      onChange={(e) => onChange(e.target.checked)}
+    />
+  )
+}
+
+export type SerializedBooleanNode = SerializedDecoratorNode & {
+  checked: boolean
+}
+
+export class BooleanNode extends DecoratorNode<React.ReactNode> {
+  __checked: boolean
+
+  constructor(checked = false, key?: string) {
+    super(key)
+    this.__checked = checked
+  }
+
   static getType(): string {
     return 'boolean'
   }
 
   static clone(node: BooleanNode): BooleanNode {
-    return new BooleanNode(node.__key)
+    return new BooleanNode(node.__checked, node.__key)
+  }
+
+  static importJSON(serialized: SerializedBooleanNode): BooleanNode {
+    return new BooleanNode(serialized.checked)
   }
 
   createDOM(): HTMLElement {
-    const dom = document.createElement('input')
-    dom.type = 'checkbox'
-    dom.className = 'checkbox'
-    return dom
+    return document.createElement('span')
   }
 
-  updateDOM(): boolean {
-    return false
-  }
-
-  static importJSON(): BooleanNode {
-    return new BooleanNode()
-  }
-
-  exportJSON(): SerializedElementNode {
+  exportJSON(): SerializedBooleanNode {
     return {
       ...super.exportJSON(),
       type: 'boolean',
       version: 1,
+      checked: this.__checked,
     }
+  }
+
+  override updateDOM() {
+    return false
+  }
+
+  override decorate(editor: LexicalEditor): React.ReactNode {
+    return (
+      <BooleanCheckbox
+        checked={this.__checked}
+        onChange={(checked) => {
+          editor.update(() => {
+            const self = this.getWritable()
+            self.__checked = checked
+          })
+        }}
+      />
+    )
   }
 
   isParentRequired(): boolean {
