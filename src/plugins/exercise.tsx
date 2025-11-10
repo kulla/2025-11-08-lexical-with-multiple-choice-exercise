@@ -253,7 +253,7 @@ export class BooleanNode extends DecoratorNode<React.ReactNode> {
 
 export class AnswerTextNode extends ElementNode {
   static getType(): string {
-    return 'answer-text'
+    return 'answerText'
   }
 
   static clone(node: SolutionNode): SolutionNode {
