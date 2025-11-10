@@ -1,4 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { mergeRegister } from '@lexical/utils'
 import {
   $createParagraphNode,
   $createTextNode,
@@ -456,52 +457,56 @@ export function ExerciseNodeTransformations() {
   }, [editor, createPreventListener])
 
   useEffect(() => {
-    return editor.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      () => {
-        const selection = $getSelection()
-        if (!$isRangeSelection(selection)) return false
+    return mergeRegister(
+      ...[AnswerNode, ExerciseNode].map((nodeClass) =>
+        editor.registerCommand(
+          SELECTION_CHANGE_COMMAND,
+          () => {
+            const selection = $getSelection()
+            if (!$isRangeSelection(selection)) return false
 
-        const anchorPath = getPath(selection.anchor.getNode())
-        const focusPath = getPath(selection.focus.getNode())
+            const anchorPath = getPath(selection.anchor.getNode())
+            const focusPath = getPath(selection.focus.getNode())
 
-        const { commonElements, restFocus, restAnchor } = commonAncestors(
-          anchorPath,
-          focusPath,
-        )
+            const { commonElements, restFocus, restAnchor } = commonAncestors(
+              anchorPath,
+              focusPath,
+            )
 
-        const commonAncestor = R.last(commonElements)
+            const commonAncestor = R.last(commonElements)
 
-        const newSelection = selection.clone()
+            const newSelection = selection.clone()
 
-        if (commonAncestor != null && commonAncestor instanceof ExerciseNode) {
-          $setSelectionToNode(newSelection, commonAncestor, 'anchor')
-          $setSelectionToNode(newSelection, commonAncestor, 'focus')
-        }
+            if (commonAncestor != null && commonAncestor instanceof nodeClass) {
+              $setSelectionToNode(newSelection, commonAncestor, 'anchor')
+              $setSelectionToNode(newSelection, commonAncestor, 'focus')
+            }
 
-        const restAnchorFirst = R.head(restAnchor)
+            const restAnchorFirst = R.head(restAnchor)
 
-        if (
-          restAnchorFirst != null &&
-          restAnchorFirst instanceof ExerciseNode
-        ) {
-          $setSelectionToNode(newSelection, restAnchorFirst, 'anchor')
-        }
+            if (
+              restAnchorFirst != null &&
+              restAnchorFirst instanceof nodeClass
+            ) {
+              $setSelectionToNode(newSelection, restAnchorFirst, 'anchor')
+            }
 
-        const restFocusFirst = R.head(restFocus)
+            const restFocusFirst = R.head(restFocus)
 
-        if (restFocusFirst != null && restFocusFirst instanceof ExerciseNode) {
-          $setSelectionToNode(newSelection, restFocusFirst, 'focus')
-        }
+            if (restFocusFirst != null && restFocusFirst instanceof nodeClass) {
+              $setSelectionToNode(newSelection, restFocusFirst, 'focus')
+            }
 
-        if (!selection.is(newSelection)) {
-          $setSelection(newSelection)
-          return true
-        }
+            if (!selection.is(newSelection)) {
+              $setSelection(newSelection)
+              return true
+            }
 
-        return false
-      },
-      COMMAND_PRIORITY_HIGH,
+            return false
+          },
+          COMMAND_PRIORITY_HIGH,
+        ),
+      ),
     )
   }, [editor])
 
