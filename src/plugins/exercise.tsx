@@ -1,4 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { mergeRegister } from '@lexical/utils'
 import {
   $createParagraphNode,
   $createTextNode,
@@ -455,15 +456,24 @@ export function ExerciseNodeTransformations() {
     )
   }, [editor, createPreventListener])
 
-  useEffect(() => {
-    return editor.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      () => {
+  const selectionChangeListener = useCallback(
+    (nodeClass: new () => ElementNode) => {
+      return () => {
         const selection = $getSelection()
         if (!$isRangeSelection(selection)) return false
 
         const anchorPath = getPath(selection.anchor.getNode())
         const focusPath = getPath(selection.focus.getNode())
+
+        console.log(nodeClass.name)
+        console.log(
+          'Anchor Path:',
+          anchorPath.map((n) => n.getType()),
+        )
+        console.log(
+          'Focus Path:',
+          focusPath.map((n) => n.getType()),
+        )
 
         const { commonElements, restFocus, restAnchor } = commonAncestors(
           anchorPath,
@@ -474,23 +484,20 @@ export function ExerciseNodeTransformations() {
 
         const newSelection = selection.clone()
 
-        if (commonAncestor != null && commonAncestor instanceof ExerciseNode) {
+        if (commonAncestor != null && commonAncestor instanceof nodeClass) {
           $setSelectionToNode(newSelection, commonAncestor, 'anchor')
           $setSelectionToNode(newSelection, commonAncestor, 'focus')
         }
 
         const restAnchorFirst = R.head(restAnchor)
 
-        if (
-          restAnchorFirst != null &&
-          restAnchorFirst instanceof ExerciseNode
-        ) {
+        if (restAnchorFirst != null && restAnchorFirst instanceof nodeClass) {
           $setSelectionToNode(newSelection, restAnchorFirst, 'anchor')
         }
 
         const restFocusFirst = R.head(restFocus)
 
-        if (restFocusFirst != null && restFocusFirst instanceof ExerciseNode) {
+        if (restFocusFirst != null && restFocusFirst instanceof nodeClass) {
           $setSelectionToNode(newSelection, restFocusFirst, 'focus')
         }
 
@@ -500,10 +507,22 @@ export function ExerciseNodeTransformations() {
         }
 
         return false
-      },
-      COMMAND_PRIORITY_HIGH,
+      }
+    },
+    [],
+  )
+
+  useEffect(() => {
+    return mergeRegister(
+      ...[ExerciseNode, AnswerNode].map((nodeClass) =>
+        editor.registerCommand(
+          SELECTION_CHANGE_COMMAND,
+          selectionChangeListener(nodeClass),
+          COMMAND_PRIORITY_HIGH,
+        ),
+      ),
     )
-  }, [editor])
+  }, [editor, selectionChangeListener])
 
   return null
 }
