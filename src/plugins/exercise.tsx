@@ -1,9 +1,3 @@
-import {
-  $getEditor,
-  DecoratorNode,
-  EditorConfig,
-  SerializedDecoratorNode,
-} from 'lexical'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import {
   $createParagraphNode,
@@ -12,6 +6,7 @@ import {
   $isRangeSelection,
   $setSelection,
   COMMAND_PRIORITY_HIGH,
+  DecoratorNode,
   ElementNode,
   KEY_BACKSPACE_COMMAND,
   KEY_DELETE_COMMAND,
@@ -19,6 +14,7 @@ import {
   type RangeSelection,
   SELECTION_CHANGE_COMMAND,
   type SerializedElementNode,
+  type SerializedLexicalNode,
   type TextNode,
 } from 'lexical'
 import * as R from 'ramda'
@@ -189,23 +185,7 @@ export class AnswerNode extends ElementNode {
   }
 }
 
-type BooleanNodeProps = {
-  checked: boolean
-  onChange: (checked: boolean) => void
-}
-
-function BooleanCheckbox({ checked, onChange }: BooleanNodeProps) {
-  return (
-    <input
-      type="checkbox"
-      className="checkbox"
-      checked={checked}
-      onChange={(e) => onChange(e.target.checked)}
-    />
-  )
-}
-
-export type SerializedBooleanNode = SerializedDecoratorNode & {
+export type SerializedBooleanNode = SerializedLexicalNode & {
   checked: boolean
 }
 
@@ -248,12 +228,14 @@ export class BooleanNode extends DecoratorNode<React.ReactNode> {
 
   override decorate(editor: LexicalEditor): React.ReactNode {
     return (
-      <BooleanCheckbox
+      <input
+        type="checkbox"
+        className="checkbox"
         checked={this.__checked}
-        onChange={(checked) => {
+        onChange={(e) => {
           editor.update(() => {
             const self = this.getWritable()
-            self.__checked = checked
+            self.__checked = e.target.checked
           })
         }}
       />
