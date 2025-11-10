@@ -256,8 +256,8 @@ export class AnswerTextNode extends ElementNode {
     return 'answerText'
   }
 
-  static clone(node: SolutionNode): SolutionNode {
-    return new AnswerNode(node.__key)
+  static clone(node: AnswerTextNode) {
+    return new AnswerTextNode(node.__key)
   }
 
   createDOM(): HTMLElement {
@@ -357,7 +357,7 @@ export function ExerciseNodeTransformations() {
       const children = node.getChildren()
 
       if (children.length === 0) {
-        node.append($createParagraphNodeWithText('Task content...'))
+        node.append($createParagraphNodeWithText(''))
       }
     })
   }, [editor])
@@ -367,7 +367,7 @@ export function ExerciseNodeTransformations() {
       const children = node.getChildren()
 
       if (children.length === 0) {
-        node.append($createParagraphNodeWithText('Solution content...'))
+        node.append($createAnswerNode())
       }
     })
   }, [editor])
