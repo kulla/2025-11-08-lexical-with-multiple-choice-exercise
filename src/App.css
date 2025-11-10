@@ -3,7 +3,11 @@
 @plugin "daisyui";
 
 .answer > p {
-  display: inline;
+  @apply inline ml-2;
+}
+
+.answer {
+  @apply mb-1;
 }
 
 .exercise {
