@@ -2,12 +2,12 @@
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 
-.answer > p {
-  @apply inline ml-2;
+.answerText {
+  @apply inline ml-3;
 }
 
 .answer {
-  @apply mb-1;
+  @apply mb-2 align-middle;
 }
 
 .exercise {

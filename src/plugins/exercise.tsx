@@ -251,6 +251,46 @@ export class BooleanNode extends DecoratorNode<React.ReactNode> {
   }
 }
 
+export class AnswerTextNode extends ElementNode {
+  static getType(): string {
+    return 'answer-text'
+  }
+
+  static clone(node: SolutionNode): SolutionNode {
+    return new AnswerNode(node.__key)
+  }
+
+  createDOM(): HTMLElement {
+    const dom = document.createElement('span')
+    dom.className = 'answerText'
+    return dom
+  }
+
+  updateDOM(): boolean {
+    return false
+  }
+
+  static importJSON(): AnswerTextNode {
+    return new AnswerTextNode()
+  }
+
+  exportJSON(): SerializedElementNode {
+    return {
+      ...super.exportJSON(),
+      type: 'answerText',
+      version: 1,
+    }
+  }
+
+  isParentRequired(): boolean {
+    return true
+  }
+
+  createParentElementNode(): ElementNode {
+    return new AnswerNode()
+  }
+}
+
 function $createExerciseNode(): ExerciseNode {
   const exercise = new ExerciseNode()
   exercise.append($createTaskNode())
@@ -274,7 +314,13 @@ function $createSolutionNode(): SolutionNode {
 function $createAnswerNode(): AnswerNode {
   const node = new AnswerNode()
   node.append($createBooleanNode())
-  node.append($createParagraphNodeWithText('Answer text...'))
+  node.append($createAnswerTextNode())
+  return node
+}
+
+function $createAnswerTextNode(): AnswerTextNode {
+  const node = new AnswerTextNode()
+  node.append($createTextNode('Answer text...'))
   return node
 }
 
