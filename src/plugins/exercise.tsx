@@ -374,6 +374,16 @@ export function ExerciseNodeTransformations() {
   }, [editor])
 
   useEffect(() => {
+    return editor.registerNodeTransform(SolutionNode, (node) => {
+      if (node.getParent()?.getType() !== 'exercise') {
+        const exerciseNode = $createExerciseNode()
+        node.replace(exerciseNode)
+        exerciseNode.getChildAtIndex(1)?.replace(node)
+      }
+    })
+  }, [editor])
+
+  useEffect(() => {
     return editor.registerNodeTransform(ExerciseNode, (node) => {
       const children = node.getChildren()
 
