@@ -5,6 +5,7 @@ import {
   $getSelection,
   $isElementNode,
   $isRangeSelection,
+  $isTextNode,
   $setSelection,
   COMMAND_PRIORITY_HIGH,
   DecoratorNode,
@@ -388,6 +389,24 @@ export function ExerciseNodeTransformations() {
       for (const child of node.getChildren()) {
         if (child.getType() !== 'answer') {
           child.remove()
+        }
+      }
+    })
+  }, [editor])
+
+  useEffect(() => {
+    return editor.registerNodeTransform(AnswerTextNode, (node) => {
+      const children = node.getChildren()
+
+      if (children.length === 0) {
+        node.append($createTextNode(''))
+      }
+
+      for (const child of children) {
+        if (!$isTextNode(child)) {
+          child.remove()
+        } else {
+          child.__text = child.getTextContent().replace(/\n/g, ' ')
         }
       }
     })
