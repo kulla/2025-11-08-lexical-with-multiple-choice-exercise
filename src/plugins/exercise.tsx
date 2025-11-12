@@ -408,8 +408,6 @@ export function ExerciseNodeTransformations() {
         return
       }
 
-      console.log('Transforming AnswerNode', node.getKey(), children)
-
       if (
         children.length !== 2 ||
         children[0].getType() !== 'boolean' ||
