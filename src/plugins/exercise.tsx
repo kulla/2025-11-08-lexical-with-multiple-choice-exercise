@@ -384,6 +384,16 @@ export function ExerciseNodeTransformations() {
   }, [editor])
 
   useEffect(() => {
+    return editor.registerNodeTransform(SolutionNode, (node) => {
+      for (const child of node.getChildren()) {
+        if (child.getType() !== 'answer') {
+          child.remove()
+        }
+      }
+    })
+  }, [editor])
+
+  useEffect(() => {
     return editor.registerNodeTransform(ExerciseNode, (node) => {
       const children = node.getChildren()
 
