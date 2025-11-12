@@ -415,10 +415,10 @@ export function ExerciseNodeTransformations() {
       ) {
         const booleanNode =
           children.find((child) => child.getType() === 'boolean') ||
-          $createTaskNode()
+          $createBooleanNode()
         const textNode =
           children.find((child) => child.getType() === 'answerText') ||
-          $createSolutionNode()
+          $createAnswerTextNode()
 
         let addText = ''
 
