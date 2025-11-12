@@ -3,6 +3,7 @@ import {
   $createParagraphNode,
   $createTextNode,
   $getSelection,
+  $isElementNode,
   $isRangeSelection,
   $setSelection,
   COMMAND_PRIORITY_HIGH,
@@ -394,6 +395,48 @@ export function ExerciseNodeTransformations() {
 
         node.append(taskNode)
         node.append(solutionNode)
+      }
+    })
+  }, [editor])
+
+  useEffect(() => {
+    return editor.registerNodeTransform(AnswerNode, (node) => {
+      const children = node.getChildren()
+
+      if (children.length === 0) {
+        node.remove()
+        return
+      }
+
+      console.log('Transforming AnswerNode', node.getKey(), children)
+
+      if (
+        children.length !== 2 ||
+        children[0].getType() !== 'boolean' ||
+        children[1].getType() !== 'answerText'
+      ) {
+        const booleanNode =
+          children.find((child) => child.getType() === 'boolean') ||
+          $createTaskNode()
+        const textNode =
+          children.find((child) => child.getType() === 'answerText') ||
+          $createSolutionNode()
+
+        let addText = ''
+
+        for (const child of children) {
+          if (child !== booleanNode && child !== textNode) {
+            addText += child.getTextContent()
+          }
+          child.remove()
+        }
+
+        if ($isElementNode(textNode)) {
+          textNode.append($createTextNode(addText))
+        }
+
+        node.append(booleanNode)
+        node.append(textNode)
       }
     })
   }, [editor])
